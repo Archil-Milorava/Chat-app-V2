@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = (req, res, next) => {
-  const token = req.cookies.token;
+export const authCheck = (req, res, next) => {
+  const token = req.cookies.loginToken;
 
   if (!token) {
     return res.status(401).json({
@@ -11,7 +11,7 @@ export const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.id;
+    req.user = decoded;
     next();
   } catch (error) {
     console.error("Token verification failed", error);
@@ -20,3 +20,5 @@ export const authMiddleware = (req, res, next) => {
     });
   }
 };
+
+
