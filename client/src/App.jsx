@@ -2,7 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/signUp";
-import Profile from "./pages/Profile"
+import Profile from "./pages/Profile";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -19,12 +20,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile/:id",
-    element: <Profile />
-  }
+    element: <Profile />,
+  },
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />;
+      <Toaster />
+    </>
+  );
 };
 
 export default App;

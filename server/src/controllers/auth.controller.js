@@ -12,6 +12,12 @@ export const signUp = async (req, res) => {
       });
     }
 
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password should have more than 6 characters",
+      });
+    }
+
     const user = await User.findOne({ email });
 
     if (user) {
@@ -53,7 +59,7 @@ export const logIn = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ nickName });
+    const user = await User.findOne({ nickName })
 
     if (!user) {
       return res.status(400).json({
@@ -78,10 +84,9 @@ export const logIn = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    
 
     res.status(200).json({
-      user,
+      user
     });
   } catch (error) {
     console.log("error from log in", error);
