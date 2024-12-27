@@ -12,7 +12,7 @@ const Profile = () => {
   const logOut = async () => {
     try {
       setLoading(true);
-      await axios.post("/api/v1/auth/logout", null, {withCredentials: true});
+      await axios.post("/api/v1/auth/logout", null, { withCredentials: true });
       toast.success("Logged out");
       setLoading(false);
       navigate("/login");
@@ -23,9 +23,8 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    console.log("clicked");
-
     logOut();
+    navigate("/login");
   };
 
   return (

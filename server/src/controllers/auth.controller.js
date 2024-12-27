@@ -59,7 +59,7 @@ export const logIn = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ nickName })
+    const user = await User.findOne({ nickName });
 
     if (!user) {
       return res.status(400).json({
@@ -84,9 +84,8 @@ export const logIn = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-
     res.status(200).json({
-      user
+      user,
     });
   } catch (error) {
     console.log("error from log in", error);
@@ -99,4 +98,29 @@ export const logIn = async (req, res) => {
 export const logOut = async (req, res) => {
   res.clearCookie("loginToken");
   res.send("Logged out successfully");
+};
+
+export const getCurrentUser = async (req, res) => {
+  const currentUserId = req.user.id
+  try {
+    console.log(currentUserId);
+
+    const currentUser = await User.findById(currentUserId).select("-password")
+
+    if(!currentUser) {
+      return res.status(400).json({
+        message: "Please Log in first"
+      })
+    }
+
+    res.status(200).json({
+      currentUser
+    })
+    
+  } catch (error) {
+    console.log("error from get current user", error);
+    res.status(500).json({
+      message: "internal server error",
+    });
+  }
 };
