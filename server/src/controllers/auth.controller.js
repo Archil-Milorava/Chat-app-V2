@@ -1,6 +1,7 @@
 import { generateToken } from "../middlewares/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 
 export const signUp = async (req, res) => {
   const { nickName, email, password } = req.body;
@@ -101,24 +102,56 @@ export const logOut = async (req, res) => {
 };
 
 export const getCurrentUser = async (req, res) => {
-  const currentUserId = req.user.id
+  const currentUserId = req.user.id;
   try {
     console.log(currentUserId);
 
-    const currentUser = await User.findById(currentUserId).select("-password")
+    const currentUser = await User.findById(currentUserId).select("-password");
 
-    if(!currentUser) {
+    if (!currentUser) {
       return res.status(400).json({
-        message: "Please Log in first"
-      })
+        message: "Please Log in first",
+      });
     }
 
     res.status(200).json({
-      currentUser
-    })
-    
+      currentUser,
+    });
   } catch (error) {
     console.log("error from get current user", error);
+    res.status(500).json({
+      message: "internal server error",
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    let { profilePic } = req.body;
+    const userId = req.user.id;
+
+    if (!profilePic) {
+      return res.status(400).json({
+        message: "picture is required",
+      });
+    } else {
+      const result = await cloudinary.uploader.upload(profilePic);
+      profilePic = result.secure_url;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic },
+      {
+        new: true,
+      }
+    );
+
+    res.status(201).json({
+      updatedUser,
+    });
+  } catch (error) {
+    console.log("error from update user", error);
     res.status(500).json({
       message: "internal server error",
     });

@@ -9,14 +9,12 @@ import Input from "../ui/Input";
 const Login = () => {
   const [nickName, setNickname] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const { login, isSignIn } = userStore();
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     login({ nickName, password });
-    navigate("/");
   };
 
   return (

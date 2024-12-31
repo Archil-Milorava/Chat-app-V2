@@ -5,6 +5,7 @@ import { create } from "zustand";
 export const userStore = create((set) => ({
   loading: false,
   isSignIn: false,
+  isUpdatign: false,
   authUser: null,
 
   getCurrentUser: async () => {
@@ -36,4 +37,20 @@ export const userStore = create((set) => ({
       set({ isSignIn: false });
     }
   },
+
+  updateProfile: async (img) => {
+    try {
+      set({ isUpdatign: true });
+      await axios.put("/api/v1/auth/update-profile",img, {withCredentials: true});
+      toast.success("updated");
+      set({ isUpdatign: false });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+      set({ isUpdatign: false });
+      throw new Error(error);
+    } finally {
+      set({ isUpdatign: false });
+    }
+  }
 }));
